@@ -496,8 +496,7 @@ WARNING
           cache.load ".bundle"
         end
 
-        version = run_stdout("#{bundle_bin} version").strip
-        topic("Installing dependencies using #{version}")
+        topic("Installing dependencies using #{bundler.version}")
 
         load_bundler_cache
 
@@ -645,13 +644,6 @@ params = CGI.parse(uri.query || "")
     end
   end
 
-  # detects if a gem is in the bundle.
-  # @param [String] name of the gem in question
-  # @return [String, nil] if it finds the gem, it will return the line from bundle show or nil if nothing is found.
-  def gem_is_bundled?(gem)
-    bundle.specs.map(&:name).include?(gem)
-  end
-
   # detects if a rake task is defined in the app
   # @param [String] the task in question
   # @return [Boolean] true if the rake task is defined in the app
@@ -672,14 +664,14 @@ params = CGI.parse(uri.query || "")
   # decides if we need to enable the dev database addon
   # @return [Array] the database addon if the pg gem is detected or an empty Array if it isn't.
   def add_dev_database_addon
-    gem_is_bundled?("pg") ? ['heroku-postgresql:hobby-dev'] : []
+    bundler.has_gem?("pg") ? ['heroku-postgresql:hobby-dev'] : []
   end
 
   # decides if we need to install the node.js binary
   # @note execjs will blow up if no JS RUNTIME is detected and is loaded.
   # @return [Array] the node.js binary path if we need it or an empty Array
   def add_node_js_binary
-    gem_is_bundled?('execjs') ? [NODE_JS_BINARY_PATH] : []
+    bundler.has_gem?('execjs') ? [NODE_JS_BINARY_PATH] : []
   end
 
   def run_assets_precompile_rake_task
