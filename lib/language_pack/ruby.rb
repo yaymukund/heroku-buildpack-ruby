@@ -481,7 +481,7 @@ WARNING
           error "Gemfile.lock is required. Please run \"bundle install\" locally\nand commit your Gemfile.lock."
         end
 
-        if has_windows_gemfile_lock?
+        if bundler.windows_gemfile_lock?
           warn(<<WARNING)
 Removing `Gemfile.lock` because it was generated on Windows.
 Bundler will do a full resolve so native gems are handled properly.
@@ -633,14 +633,6 @@ params = CGI.parse(uri.query || "")
         DATABASE_YML
         end
       end
-    end
-  end
-
-  # detects whether the Gemfile.lock contains the Windows platform
-  # @return [Boolean] true if the Gemfile.lock was created on Windows
-  def has_windows_gemfile_lock?
-    bundle.platforms.detect do |platform|
-      /mingw|mswin/.match(platform.os) if platform.is_a?(Gem::Platform)
     end
   end
 
