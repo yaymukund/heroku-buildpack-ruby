@@ -67,9 +67,14 @@ module LanguagePack
       $stdout.flush
     end
 
-    def warn(message)
-      @warnings ||= []
-      @warnings << message
+    def warn(message, options = {})
+      if options.key?(:inline) ? options[:inline] : false
+        topic "Warning:"
+        puts message
+      else
+        @warnings ||= []
+        @warnings << message
+      end
     end
 
     def deprecate(message)
