@@ -118,6 +118,7 @@ class LanguagePack::Ruby < LanguagePack::Base
         build_bundler
         create_database_yml
         install_binaries
+        run_setup_script
         run_assets_precompile_rake_task
       end
       super
@@ -319,6 +320,13 @@ WARNING
     end
 
     true
+  end
+
+  def run_setup_script
+    puts 'Running setup script'
+    instrument 'ruby.run_setup_script' do
+      run('bundle exec script/setup')
+    end
   end
 
   def new_app?
